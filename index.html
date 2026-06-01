@@ -1,62 +1,34 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>ARCHAD SHOP — тест заказа</title>
-    <style>
-        body { background: #000; color: white; font-family: system-ui; padding: 20px; }
-        button { background: red; color: white; padding: 15px; border: none; border-radius: 12px; font-size: 18px; width: 100%; margin-top: 20px; }
-        .cart-item { background: #111; padding: 10px; margin: 10px 0; border-radius: 12px; }
-    </style>
-</head>
-<body>
-    <h1>ARCHAD SHOP — ТЕСТ</h1>
-    <div id="cartList"></div>
-    <button id="checkoutBtn">✅ Оформить тестовый заказ</button>
-
-    <script>
-        // ТВОИ РАБОЧИЕ ДАННЫЕ
-        const BOT_TOKEN = "8946537004:AAGqZiirco4qn8DWgGY-mlLdooO1W_LGhqk";
-        const SELLER_ID = "8173700385";
-
-        let cart = [{ name: "Тестовый товар", price: 10, qty: 1, brand: "ARCHAD", selectedOption: "Тест" }];
-
-        function updateCartUI() {
-            let cartList = document.getElementById('cartList');
-            cartList.innerHTML = cart.map(item => `
-                <div class="cart-item">
-                    <strong>${item.brand} ${item.name}</strong><br>
-                    ${item.selectedOption} | ${item.price} BYN × ${item.qty} = ${item.price * item.qty} BYN
-                </div>
-            `).join('');
-        }
-
         function checkout() {
+            if (cart.length === 0) { 
+                alert('Корзина пуста!'); 
+                return; 
+            }
+            
             let total = cart.reduce((s, i) => s + i.price * i.qty, 0);
             let orderItems = cart.map(i => `${i.brand} ${i.name} (${i.selectedOption}) x${i.qty} = ${i.price * i.qty} BYN`).join('\n');
-            let orderText = `🆕 ТЕСТОВЫЙ ЗАКАЗ ARCHAD SHOP\n━━━━━━━━━━━━━━━━\n👤 Тестовый пользователь\n🆔 ID: 12345\n\n📦 ТОВАРЫ:\n${orderItems}\n━━━━━━━━━━━━━━━━\n💰 ИТОГО: ${total} BYN`;
-
+            let orderText = `🆕 НОВЫЙ ЗАКАЗ ARCHAD SHOP\n━━━━━━━━━━━━━━━━\n👤 ${userData.name}\n🆔 ID: ${userData.id}\n\n📦 ТОВАРЫ:\n${orderItems}\n━━━━━━━━━━━━━━━━\n💰 ИТОГО: ${total} BYN\n🚚 Доставка: 11:00-21:00`;
+            
+            const BOT_TOKEN = "8946537004:AAGqZiirco4qn8DWgGY-mlLdooO1W_LGhqk";
+            const SELLER_ID = "8173700385";
+            
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: SELLER_ID, text: orderText })
             })
-            .then(res => res.json())
+            .then(response => response.json())
             .then(data => {
                 if (data.ok) {
-                    alert('✅ ЗАКАЗ ОТПРАВЛЕН! Проверь Telegram.');
+                    alert('✅ Заказ отправлен! Продавец свяжется с вами.');
+                    cart = [];
+                    saveCart();
+                    showPage('catalog');
                 } else {
                     alert('❌ Ошибка: ' + data.description);
                 }
             })
             .catch(e => {
                 console.error(e);
-                alert('❌ Ошибка соединения: ' + e.message);
+                alert('❌ Ошибка отправки. Попробуйте позже.');
             });
         }
-
-        updateCartUI();
-        document.getElementById('checkoutBtn').onclick = checkout;
-    </script>
-</body>
-</html>

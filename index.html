@@ -6,7 +6,21 @@
             
             let total = cart.reduce((s, i) => s + i.price * i.qty, 0);
             let orderItems = cart.map(i => `${i.brand} ${i.name} (${i.selectedOption}) x${i.qty} = ${i.price * i.qty} BYN`).join('\n');
-            let orderText = `🆕 НОВЫЙ ЗАКАЗ ARCHAD SHOP\n━━━━━━━━━━━━━━━━\n👤 ${userData.name}\n🆔 ID: ${userData.id}\n\n📦 ТОВАРЫ:\n${orderItems}\n━━━━━━━━━━━━━━━━\n💰 ИТОГО: ${total} BYN\n🚚 Доставка: 11:00-21:00`;
+            
+            // Получаем данные пользователя из Telegram
+            let tgNickname = "не указан";
+            let tgFirstName = userData.name;
+            let tgUserId = userData.id || "не авторизован";
+            
+            if (tg && tg.initDataUnsafe?.user) {
+                if (tg.initDataUnsafe.user.username) {
+                    tgNickname = "@" + tg.initDataUnsafe.user.username;
+                }
+                tgFirstName = tg.initDataUnsafe.user.first_name || "Гость";
+                tgUserId = tg.initDataUnsafe.user.id || "не известен";
+            }
+            
+            let orderText = `🆕 НОВЫЙ ЗАКАЗ ARCHAD SHOP\n━━━━━━━━━━━━━━━━\n👤 Имя: ${tgFirstName}\n📱 Ник: ${tgNickname}\n🆔 ID: ${tgUserId}\n\n📦 ТОВАРЫ:\n${orderItems}\n━━━━━━━━━━━━━━━━\n💰 ИТОГО: ${total} BYN`;
             
             const BOT_TOKEN = "8946537004:AAGqZiirco4qn8DWgGY-mlLdooO1W_LGhqk";
             const SELLER_ID = "8173700385";

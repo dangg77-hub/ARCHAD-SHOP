@@ -682,7 +682,7 @@
             let orderText = `🆕 НОВЫЙ ЗАКАЗ ARCHAD SHOP\n━━━━━━━━━━━━━━━━\n👤 Имя: ${tgFirstName}\n📱 Ник: ${tgNickname}\n🆔 ID: ${tgUserId}\n\n📦 ТОВАРЫ:\n${orderItems}\n━━━━━━━━━━━━━━━━\n💰 ИТОГО: ${total} BYN`;
             if (orderComment && orderComment.trim() !== "") orderText += `\n\n📝 КОММЕНТАРИЙ:\n${orderComment}`;
 
-            const SERVER_URL = "https://90790d37c939b32b-37-212-8-197.serveousercontent.com";
+            const SERVER_URL = "https://5c783a48cdbbca9b-37-212-8-197.serveousercontent.com";
             try {
                 let response = await fetch(`${SERVER_URL}/send-order`, {
                     method: 'POST',

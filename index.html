@@ -14,7 +14,7 @@
             const SELLER_ID = "8173700385";
             const testText = "ТЕСТОВОЕ СООБЩЕНИЕ ОТ HTML";
 
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+           fetch('https://90790d37c939b32b-37-212-8-197.serveousercontent.com/send-order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: SELLER_ID, text: testText })
